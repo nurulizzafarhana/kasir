@@ -132,7 +132,7 @@ if (empty($_SESSION['click_count'])) {
 
                 button.addEventListener('click', function() {
                     let currentCount = parseInt(countDisplay.value) || 0;
-                    ++currentCount;
+                    currentCount++;
                     countDisplay.value = currentCount;
 
                     //fungsi tambah td
