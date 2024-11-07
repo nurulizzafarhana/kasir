@@ -67,7 +67,7 @@ if (empty($_SESSION['click_count'])) {
                                 <input id="tanggal_transaksi" name="tanggal_transaksi" class="form-control" type="date" value="<?php echo $currentTime ?>" readonly>
                         </div>
 
-                        <div class="mt-1">
+                        <div class="mt-2">
                             <div class="row align-items-center">
                                 <div class="col-auto">
                                     <button id="counterBtn" type="button" class="btn btn-primary btn-sm">Tambah</button>
@@ -152,9 +152,92 @@ if (empty($_SESSION['click_count'])) {
                     <?php
                     } ?>
                     newRow += "</select></td>";
+                    newRow += "<td><select class='form-control item-select' name='id_barang[]' required>";
+                    newRow += "<option value=''>--Pilih Barang--</option>";
+                    newRow += "</select></td>";
+                    newRow += "<td><input type='number' name='jumlah[]' class='form-control jumlah-input' value='0' required></td>";
+                    newRow += "<td><input type='number' name='sisa_produk[]' class='form-control' readonly></td>";
+                    newRow += "<td><input type='number' name='harga[]' class='form-control' readonly></td>";
                     newRow += "</tr>";
                     tbody.insertAdjacentHTML('beforeend', newRow);
-                })
+
+                    attachCategoryChangeListener();
+                    attachItemChangeListener();
+                    attachJumlahChangeListener();
+                });
+
+                function attachCategoryChangeListener(){
+                    const categorySelects = document.querySelectorAll('.category-select');
+                    categorySelects.forEach(select => {
+                        select.addEventListener('change', function(){
+                            const categoryId = this.value;
+                            const itemSelect = this.closest('tr').querySelector('.item-select');
+                                if (categoryId) {
+                                fetch(`controller/get-product-dari-category.php?id_kategori=${categoryId}`)
+                                .then(response => response.json())
+                                .then(data => {
+                                    itemSelect.innerHTML = "<option value=''>--Pilih Barang--</option>";
+                                    data.forEach(item => {
+                                        itemSelect.innerHTML += `<option value='${item.id}'>${item.nama_barang}</option>`;
+                                    });
+                                });
+                                } else {
+                                    itemSelect.innerHTML = "<option value=''>--Pilih Barang--</option>";
+                                }
+                        });
+                    });
+                }
+
+
+                //untuk menampilkan qty dan harga
+                function attachItemChangeListener() {
+                    const itemSelects = document.querySelectorAll('.item-select');
+                    itemSelects.forEach(select => {
+                        select.addEventListener('change', function(){
+                            const itemId = this.value;
+                            const row = this.closest('tr');
+                            const sisaProdukInput = row.querySelector('input[name="sisa_produk[]"]');
+                            const hargaInput = row.querySelector('input[name="harga[]"]');
+
+                            if (itemId) {
+                                fetch('controller/get-barang-details.php?id_barang=' + itemId)
+                                    .then(response => response.json())
+                                    .then(data => {
+                                        sisaProdukInput.value = data.qty;
+                                        hargaInput.value = data.harga;
+                                    })
+                            } else {
+                                sisaProdukInput.value = '';
+                                hargaInput.value = '';
+                            }
+                        });
+                    });
+                }
+
+                function attachJumlahChangeListener(){
+                    const jumlahInputs = document.querySelectorAll('.jumlah-input');
+                    jumlahInputs.forEach(input => {
+                        input.addEventListener('input', function() {
+                            const row = this.closest('tr');
+                            const sisaProdukInput = row.querySelector('input[name="sisa_produk[]"]');
+                            const hargaInput = row.querySelector('input[name="harga[]"]');
+                            const nominalBayarInput = document.getElementById('nominal_bayar_keseluruhan');
+                            const kembalianInput = document.getElementById('kembalian_keseluruhan');
+
+                            const jumlah = parseInt(this.value) || 0;
+                            const sisaProduk = parseInt(sisaProdukInput.value) || 0;
+                            const harga = parseFloat(hargaInput.value) || 0;
+
+                            if (jumlah > sisaProduk) {
+                                alert("Jumlah tidak boleh melebihi sisa produk");
+                                this.value = sisaProduk;
+                                return;
+                            }
+                        });
+                    });
+                }
+
+
             })
         </script>
 
