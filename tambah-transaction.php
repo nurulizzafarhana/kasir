@@ -64,14 +64,21 @@ if (empty($_SESSION['click_count'])) {
                         </div>
                         <div class="mb-1">
                             <label class="form-label" for="" >Tanggal Transaksi</label>
-                            <input id="tanggal_transaksi" name="tanggal_transaksi" class="form-control w-50" type="date" value="<?php echo $currentTime ?>" readonly>
+                                <input id="tanggal_transaksi" name="tanggal_transaksi" class="form-control" type="date" value="<?php echo $currentTime ?>" readonly>
                         </div>
 
-                        <div class="mb-1">
-                            <button id="counterBtn" type="button" class="btn btn-primary btn-sm">Tambah</button>
-                            <input id="countDisplay" name="countDisplay" class="form-control mt-3" style="width: 50px; display:inline;" value="<?php echo $_SESSION['click_count'] ?>" type="number" readonly>
+                        <div class="mt-1">
+                            <div class="row align-items-center">
+                                <div class="col-auto">
+                                    <button id="counterBtn" type="button" class="btn btn-primary btn-sm">Tambah</button>
+                                </div>
+                                <div class="col-auto">
+                                    <input id="countDisplay" name="countDisplay" class="form-control mt-3 mt-sm-0" value="<?php echo $_SESSION['click_count'] ?>" type="number" readonly>
+                                </div>
+                            </div>
                         </div>
-                        <div class="table table-responsive mt-5">
+
+                        <div class="table table-responsive mt-3">
                             <table class="table table-bordered">
                                 <thead class="text-center">
                                     <tr>
