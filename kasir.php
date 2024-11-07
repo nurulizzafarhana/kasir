@@ -2,6 +2,14 @@
 session_start();
 session_regenerate_id();
 
+require_once "config/koneksi.php";
+
+$queryDetail = "SELECT * FROM penjualan";
+$result = $koneksi->query($queryDetail);
+
+// Menghitung nomor urut
+$no = 1;
+
 
 //Jika session kosong, maka melempar ke Login
 // if (empty($_SESSION['nama']) && empty($_SESSION['email'])) {
@@ -62,14 +70,26 @@ session_regenerate_id();
                                     </thead>
 
                                     <tbody>
-                                        <tr>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                        </tr>
+                                            <?php if ($result->num_rows > 0): ?>
+                                            <?php while($row = $result->fetch_assoc()): ?>
+                                                <tr class="text-center">
+                                                    <td><?php echo $no++; ?></td>
+                                                    <td><?php echo htmlspecialchars($row['kode_transaksi']); ?></td>
+                                                    <td><?php echo htmlspecialchars($row['tanggal_transaksi']); ?></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td>
+                                                        <!-- Tambahkan tombol atau link untuk mengedit atau menghapus transaksi -->
+                                                        <a href="edit.php?id=<?php echo $row['id']; ?>" class="btn btn-warning btn-sm">Edit</a>
+                                                        <a href="hapus.php?id=<?php echo $row['id']; ?>" class="btn btn-danger btn-sm">Hapus</a>
+                                                    </td>
+                                                </tr>
+                                            <?php endwhile; ?>
+                                            <?php else: ?>
+                                            <tr>
+                                                <td colspan="6" class="text-center">Tidak ada data</td>
+                                            </tr>
+                                        <?php endif; ?>
                                     </tbody>
 
                                 </table>

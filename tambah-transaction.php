@@ -57,7 +57,7 @@ if (empty($_SESSION['click_count'])) {
                 <div class="col-1"></div>
 
                 <div class="col-10 mt-4">
-                    <form action="" method="POST">
+                    <form action="controller/transaksi-store.php" method="POST">
                         <div class="mb-1">
                             <label class="form-label" for="" >Kode Transaksi</label>
                             <input id="kode_transaksi" name="kode_transaksi" class="form-control w-50" type="text" value="<?php echo "TR-" . generateTransactionCode() ?>" readonly>
@@ -102,7 +102,7 @@ if (empty($_SESSION['click_count'])) {
                                     </tr>
                                     <tr>
                                         <th colspan="5">Nominal Bayar</th>
-                                        <td><input type="number" id="nominal_bayar_keseluruhan" name="nominal_bayar" class="form-control" readonly></td>
+                                        <td><input type="number" id="nominal_bayar_keseluruhan" name="nominal_bayar" class="form-control" required></td>
                                     </tr>
                                     <tr>
                                         <th colspan="5">Kembalian</th>
@@ -214,6 +214,12 @@ if (empty($_SESSION['click_count'])) {
                     });
                 }
 
+
+                const totalHargaKeseluruhan = document.getElementById('total_harga_keseluruhan');
+                const nominalBayarKeseluruhanInput = document.getElementById('nominal_bayar_keseluruhan');
+                const kembalianKeseluruhanInput = document.getElementById('kembalian_keseluruhan');
+
+
                 function attachJumlahChangeListener(){
                     const jumlahInputs = document.querySelectorAll('.jumlah-input');
                     jumlahInputs.forEach(input => {
@@ -233,12 +239,33 @@ if (empty($_SESSION['click_count'])) {
                                 this.value = sisaProduk;
                                 return;
                             }
+                            updateTotalKeseluruhan();
                         });
                     });
+
+                    
                 }
 
+                function updateTotalKeseluruhan() {
+                    let totalKeseluruhan = 0;
+                    const jumlahInput = document.querySelectorAll('.jumlah-input');
+                    jumlahInput.forEach(input =>{
+                        const row = input.closest('tr');
+                        const hargaInput = row.querySelector('input[name="harga[]"]');
+                        const harga = parseFloat(hargaInput.value) || 0;
+                        const jumlah = parseInt(input.value) || 0;
+                        totalKeseluruhan += jumlah * harga;
+                    });
+                    totalHargaKeseluruhan.value = totalKeseluruhan;
+                }
 
-            })
+                nominalBayarKeseluruhanInput.addEventListener('input', function(){
+                    const nominalBayar = parseFloat(this.value) || 0;
+                    const totalHarga = parseFloat(totalHargaKeseluruhan.value) || 0;
+                    kembalianKeseluruhanInput.value = nominalBayar - totalHarga;
+                });
+            
+            });
         </script>
 
     <footer class="mt-4" style="background-color: #008080;">
