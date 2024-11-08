@@ -55,7 +55,7 @@ $no = 1;
                         <div class="card-body">
                             <div class="table table-responsive">
                                 <div class="mt-2 mb-4">
-                                    <a href="tambah-transaction.php" class="btn btn-primary btn-sm">Kasir</a>
+                                    <a href="tambah-transaction.php" class="btn btn-primary btn-sm">Manage Kasir</a>
                                 </div>
                                 <table class="table table-bordered">
                                     <thead>

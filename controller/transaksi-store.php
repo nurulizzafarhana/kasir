@@ -38,7 +38,7 @@ if (isset($_POST['simpan'])) {
     }
 
    
-    header("Location: ../kasir.php");
+    header("Location: ../print.php?id=" . $id_penjualan);
     exit();
 
 
