@@ -145,7 +145,7 @@ while ($rowDetail = mysqli_fetch_assoc($queryDetail)) {
                         <td><?php echo $rowDetail['nama_barang'] ?></td>
                         <td><?php echo $rowDetail['jumlah'] ?></td>
                         <td><?php echo "Rp " . number_format($rowDetail['harga']) ?></td>
-                        <td><?php echo "Rp " . number_format($rowDetail['total_harga']) ?></td>
+                        <td><?php echo "Rp " . number_format($rowDetail['sub_total']) ?></td>
                     </tr>
                     <?php endforeach ?>
                 </tbody>
